@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+    
+<mapper namespace="kr.co.windrider.myLife">
+	<!-- 나의 일상 조회 -->
+	<select id = "getMyLife" parameterType = "java.util.HashMap" resultType = "kr.co.windrider.vo.MyLifeVo">
+		/* kr.co.windrider.MyLife.getMyLife */
+        SELECT   UUID          AS uuid        
+                ,IMG_URL       AS imgUrl     
+                ,TITLE         AS title       
+                ,CONTENTS      AS contents    
+                ,DELETE_YN     AS deleteYn   
+                ,UPDATE_USER   AS updateUser 
+                ,UPDATE_DATE   AS updateDate 
+                ,CREATE_USER   AS createUser 
+                ,CREATE_DATE   AS createDate 
+        FROM   MY_LIFE
+	</select>
+	
+</mapper>	

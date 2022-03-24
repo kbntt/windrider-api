@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="kr.co.windrider.home">
+	<!-- test -->
+	<select id = "getTest" parameterType = "java.util.HashMap" resultType = "kr.co.windrider.vo.BlogVo">
+		/* kr.co.windrider.home.getTest */
+		SELECT  UUID     
+		       ,IMG_URL  
+		       ,TITLE    
+		       ,CONTENTS    
+		       ,DELETE_YN   
+		       ,UPDATE_USER 
+		       ,UPDATE_DATE 
+		       ,CREATE_USER 
+		       ,CREATE_DATE 
+		FROM    blog
+	</select>
+	
+
+	<!-- Top Menu 조회 -->
+	<select id = "getTopMenu" parameterType = "java.util.HashMap" resultType = "kr.co.windrider.vo.MenuVo">
+		/* kr.co.windrider.home.getTopMenu */
+        SELECT  UUID         AS uuid                             
+               ,CODE         AS code                             
+               ,CODE_NAME    AS codeName                        
+               ,PARENTS_CODE AS parentsCode                     
+               ,MENU_LINK    AS menuLink                        
+               ,AUTH         AS auth                             
+               ,LIST_ORDER   AS listOrder                       
+               ,COMMENT      AS comment                          
+               ,DELETE_YN    AS deleteYn                        
+               ,UPDATE_USER  AS updateUser                      
+               ,UPDATE_DATE  AS updateDate                      
+               ,CREATE_USER  AS createUser                      
+               ,CREATE_DATE  AS createDate                      
+        FROM MENU;
+	</select>
+	
+</mapper>	
