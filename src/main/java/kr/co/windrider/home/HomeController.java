@@ -15,6 +15,7 @@ public class HomeController {
 	@Autowired
 	public HomeService homeService;
 
+	/* github test*/
 	@GetMapping("/home/getTest")
 	public List<BlogVo> getTest() {
 		System.out.println("getTest");
