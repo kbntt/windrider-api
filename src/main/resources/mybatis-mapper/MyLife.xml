@@ -7,8 +7,7 @@
 	<!-- 나의 일상 조회 -->
 	<select id = "getMyLife" parameterType = "java.util.HashMap" resultType = "kr.co.windrider.vo.MyLifeVo">
 		/* kr.co.windrider.MyLife.getMyLife */
-        SELECT   UUID          AS uuid        
-                ,IMG_URL       AS imgUrl     
+        SELECT   UUID          AS uuid     
                 ,TITLE         AS title       
                 ,CONTENTS      AS contents    
                 ,DELETE_YN     AS deleteYn   
@@ -17,16 +16,13 @@
                 ,CREATE_USER   AS createUser 
                 ,CREATE_DATE   AS createDate 
         FROM   MY_LIFE
-        WHERE 1 = 1
-        <if test = 'myLifeVo.uuid != null and myLifeVo.uuid != ""'>
-	     	AND UUID = #{myLifeVo.uuid}
-	    </if>
-	    ORDER BY CREATE_DATE DESC
 	</select>
+	
+	<!-- 나의 일상 저장 -->
 	<insert id = "saveMyLife" parameterType = "java.util.HashMap">
-	/* kr.co.windrider.MyLife.saveMyLife */
-        INSERT INTO MY_LIFE ( UUID    ,IMG_URL     ,TITLE       ,CONTENTS    ,DELETE_YN   ,UPDATE_USER ,UPDATE_DATE ,CREATE_USER ,CREATE_DATE )
-        VALUES(              uuid()   ,#{myLifeVo.imgUrl}   ,#{myLifeVo.title}     ,#{myLifeVo.contents}  ,'N'         ,NULL        ,NULL        ,'admin'     ,now()       )
+		/* kr.co.windrider.MyLife.saveMyLife */
+        INSERT INTO MY_LIFE ( UUID       ,TITLE       ,CONTENTS    ,DELETE_YN   ,UPDATE_USER ,UPDATE_DATE ,CREATE_USER ,CREATE_DATE )
+        VALUES(              uuid()      ,#{myLifeVo.title}     ,'CONTENTS'  ,'N'         ,NULL        ,NULL        ,'admin'     ,now()       )
 	</insert>
 	
 </mapper>	

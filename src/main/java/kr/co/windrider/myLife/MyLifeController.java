@@ -2,10 +2,12 @@ package kr.co.windrider.myLife;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,8 +47,8 @@ public class MyLifeController {
 		return list;
 	}
 
-	@PostMapping("/myLife/saveMyLife")
-	public HashMap<String, Object> saveMyLife(@RequestBody HashMap<String, Object> data) {
+	@PostMapping("/myLife/saveMyLife_back")
+	public HashMap<String, Object> saveMyLife_back(@RequestBody HashMap<String, Object> data) {
 		System.out.println("saveMyLife");
 		String title = (String) data.get("title");
 		MyLifeVo myLifeVo = new MyLifeVo();
@@ -55,7 +57,35 @@ public class MyLifeController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("myLifeVo", myLifeVo);
 		
-		int result = myLifeService.saveMyLife(map);
+		int result = 0;//myLifeService.saveMyLife(map);
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		if( 0 < result  ) { resultMap.put("msg", "SUCCESS");}
+		else { resultMap.put("msg", "FAIL");}
+		
+		return resultMap;
+	}
+
+
+	@PostMapping("/myLife/saveMyLife")
+	public HashMap<String, Object> saveMyLife(HttpServletRequest request, MultipartFile file) {
+		System.out.println("saveMyLife");
+		String uuid = UUID.randomUUID().toString();
+		String title = (String) request.getParameter("title");
+		String contents = (String) request.getParameter("contents");
+		Date date = new Date();
+		
+		MyLifeVo myLifeVo = new MyLifeVo();
+		myLifeVo.setUuid(uuid);
+		myLifeVo.setTitle(title);
+		myLifeVo.setContents(contents);
+		myLifeVo.setCreateUser("windRider");
+		myLifeVo.setCreateDate(date);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("myLifeVo", myLifeVo);
+		
+		int result = myLifeService.saveMyLife(map,file);
 		
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		if( 0 < result  ) { resultMap.put("msg", "SUCCESS");}
@@ -66,9 +96,10 @@ public class MyLifeController {
 
 	@PostMapping("/myLife/fileUploadTest")
 	public void fileUploadTest(MultipartFile file) throws Exception{
+		String fileUuid = UUID.randomUUID().toString();
 		String filePath = FilePath.MYLIFE_PATH;
 		System.out.println(filePath);
-		fileStorageService.upload(file, filePath);
+		fileStorageService.upload(file, filePath,fileUuid);
 		
 	}
 }

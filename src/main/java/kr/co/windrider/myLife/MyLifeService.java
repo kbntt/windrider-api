@@ -12,6 +12,6 @@ import kr.co.windrider.vo.MyLifeVo;
 
 public interface MyLifeService {
 	public List<MyLifeVo> getMyLife(HashMap<String, Object> map); 
-	public int saveMyLife(HashMap<String, Object> map);
+	public int saveMyLife(HashMap<String, Object> map,MultipartFile file);
 	
 }
