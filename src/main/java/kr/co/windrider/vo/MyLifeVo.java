@@ -1,11 +1,11 @@
 package kr.co.windrider.vo;
 
 import java.util.Date;
+import java.util.List;
 
 public class MyLifeVo {
 	
 	private String  uuid        ;
-	private String  imgUrl      ;
 	private String  title       ;
 	private String  contents    ;
 	private String  deleteYn    ;
@@ -13,18 +13,26 @@ public class MyLifeVo {
 	private Date    updateDate  ;
 	private String  createUser  ;
 	private Date    createDate  ;
-
+	private List<AttachFileVo> filelist;
+	private String  imageModState    ;
+	
+	public String getImageModState() {
+		return imageModState;
+	}
+	public void setImageModState(String imageModState) {
+		this.imageModState = imageModState;
+	}
+	public List<AttachFileVo> getFilelist() {
+		return filelist;
+	}
+	public void setFilelist(List<AttachFileVo> filelist) {
+		this.filelist = filelist;
+	}
 	public String getUuid() {
 		return uuid;
 	}
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
-	public String getImgUrl() {
-		return imgUrl;
-	}
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
 	}
 	public String getTitle() {
 		return title;

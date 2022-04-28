@@ -7,22 +7,55 @@
 	<!-- 나의 일상 조회 -->
 	<select id = "getMyLife" parameterType = "java.util.HashMap" resultType = "kr.co.windrider.vo.MyLifeVo">
 		/* kr.co.windrider.MyLife.getMyLife */
-        SELECT   UUID          AS uuid     
-                ,TITLE         AS title       
-                ,CONTENTS      AS contents    
-                ,DELETE_YN     AS deleteYn   
-                ,UPDATE_USER   AS updateUser 
-                ,UPDATE_DATE   AS updateDate 
-                ,CREATE_USER   AS createUser 
-                ,CREATE_DATE   AS createDate 
-        FROM   MY_LIFE
+        SELECT   ML.UUID          AS uuid     
+                ,ML.TITLE         AS title       
+                ,ML.CONTENTS      AS contents    
+                ,ML.DELETE_YN     AS deleteYn   
+                ,ML.UPDATE_USER   AS updateUser 
+                ,ML.UPDATE_DATE   AS updateDate 
+                ,ML.CREATE_USER   AS createUser 
+                ,ML.CREATE_DATE   AS createDate
+        FROM   MY_LIFE ML
+        WHERE  1 = 1
+        <if test='myLifeVo.uuid != null'>
+          AND    ML.UUID = #{myLifeVo.uuid}
+        </if>
+        ORDER BY ML.CREATE_DATE DESC
 	</select>
 	
 	<!-- 나의 일상 저장 -->
 	<insert id = "saveMyLife" parameterType = "java.util.HashMap">
 		/* kr.co.windrider.MyLife.saveMyLife */
         INSERT INTO MY_LIFE ( UUID       ,TITLE       ,CONTENTS    ,DELETE_YN   ,UPDATE_USER ,UPDATE_DATE ,CREATE_USER ,CREATE_DATE )
-        VALUES(              uuid()      ,#{myLifeVo.title}     ,'CONTENTS'  ,'N'         ,NULL        ,NULL        ,'admin'     ,now()       )
+        VALUES(              #{myLifeVo.uuid}      ,#{myLifeVo.title}     ,#{myLifeVo.contents}  ,#{myLifeVo.deleteYn}, #{myLifeVo.updateUser},#{myLifeVo.updateDate},#{myLifeVo.createUser},#{myLifeVo.createDate}      )
 	</insert>
+	
+	<!-- 파일 수정 2022-04-11 -->
+	<update id = "updateMyLife" parameterType="java.util.HashMap">
+		/* kr.co.windrider.MyLife.updateMyLife */
+         UPDATE MY_LIFE
+         SET    UPDATE_USER = #{myLifeVo.updateUser}
+               ,UPDATE_DATE = #{myLifeVo.updateDate}
+                <if test = 'myLifeVo.title != null and myLifeVo.title != ""'>
+                  ,TITLE = #{myLifeVo.title}
+                </if>
+                <if test = 'myLifeVo.contents != null and myLifeVo.contents != ""'>
+                  ,CONTENTS = #{myLifeVo.contents}
+                </if>
+                <if test = 'myLifeVo.deleteYn != null and myLifeVo.deleteYn != ""'>
+                  ,DELETE_YN = #{myLifeVo.deleteYn}
+                </if>
+         WHERE 1=1
+         <if test = 'myLifeVo.uuid != null and myLifeVo.uuid != ""'>
+           AND UUID = #{myLifeVo.uuid}
+         </if>
+     </update>
+	 <delete id="delMyLife" parameterType = "java.util.HashMap">
+	     /* kr.co.windrider.myLife.delMyLife */
+	     DELETE
+	     FROM   MY_LIFE
+	     WHERE  1 = 1
+	     AND    UUID = #{myLifeVo.uuid}
+	 </delete>
 	
 </mapper>	

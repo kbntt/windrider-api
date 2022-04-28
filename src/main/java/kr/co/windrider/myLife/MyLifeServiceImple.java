@@ -1,16 +1,13 @@
 package kr.co.windrider.myLife;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import kr.co.windrider.comm.file.FileStorageService;
+import kr.co.windrider.vo.AttachFileVo;
 import kr.co.windrider.vo.MyLifeVo;
 
 @Service
@@ -30,6 +27,7 @@ public class MyLifeServiceImple implements MyLifeService{
 		List<MyLifeVo> list = sqlSession.selectList(namespace+sqlId, map);
 		return list;
 	}
+
 	@Override
 	public int saveMyLife(HashMap<String, Object> map,MultipartFile file) {
 		
@@ -44,5 +42,44 @@ public class MyLifeServiceImple implements MyLifeService{
 		}
 		return result;
 	}
-	
+
+	@Override
+	public int modifyMyLife(HashMap<String, Object> map,MultipartFile file) {
+		
+		MyLifeVo myLifeVo = new MyLifeVo();
+		
+		myLifeVo = (MyLifeVo)map.get("myLifeVo");
+		String boardUuid = myLifeVo.getUuid(); 
+		List<AttachFileVo> fileList = myLifeVo.getFilelist(); 
+		
+		int result = 0;
+		// 파일이 수정됨
+		if( "true".equals(myLifeVo.getImageModState()) ) {
+			for(int i =0; i < fileList.size(); i++) {
+			    result = fileStorageService.modifyAttachFile(file, boardUuid, fileList.get(i).getOrgFileUuid());
+				if(0 < result) {
+					String sqlId = ".updateMyLife";
+					result = sqlSession.update(namespace+sqlId, map);
+				}
+			}
+		}else {
+			// 파일이 수정안됨
+			String sqlId = ".updateMyLife";
+			result = sqlSession.update(namespace+sqlId, map);
+		}
+		
+		return result;
+	}
+	@Override
+	public int delMyLife(HashMap<String, Object> map) {
+		String sqlId = ".delMyLife";
+		int result = sqlSession.delete(namespace+sqlId, map);
+		
+		MyLifeVo myLifeVo = new MyLifeVo();
+		myLifeVo = (MyLifeVo)map.get("myLifeVo");
+		String boardUuid = myLifeVo.getUuid();
+		fileStorageService.deleteAttachFile(boardUuid);
+		return result;
+	}
+
 }

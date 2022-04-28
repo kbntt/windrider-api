@@ -7,14 +7,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
-
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import kr.co.windrider.vo.AttachFileVo;
 
 
@@ -69,12 +69,12 @@ public class FileStorageServiceImple implements FileStorageService {
 		Date date = new Date();
 		String uploadPath = FilePath.MYLIFE_PATH;
 		String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-		String storedFileName = boardUiid+extension;
+		String storedFileName = uuid+extension;
 		
 		AttachFileVo attachFileVo = new AttachFileVo();
 		attachFileVo.setUuid(uuid);
 		attachFileVo.setBoardUuid(boardUiid);
-		attachFileVo.setOrgFileName(storedFileName);
+		attachFileVo.setOrgFileName(originalFilename);
 		attachFileVo.setFileDirectory(uploadPath);
 		attachFileVo.setFileSize(fileSize);
 		attachFileVo.setFileType(fileType);
@@ -90,6 +90,79 @@ public class FileStorageServiceImple implements FileStorageService {
 			upload(file,uploadPath,storedFileName);
 		}
 		return result;
+	}
+	
+    @Override
+	public void delete(String filename) {
+		try {
+			String uploadPath = springUploadPath + FilePath.MYLIFE_PATH;
+			
+			String delFile = uploadPath + filename;
+			Path filePath = Paths.get(delFile);
+			Files.deleteIfExists(filePath);
+			
+		}catch( Exception e) {
+			throw new RuntimeException("Could not delete the file. Error: " + e.getMessage());
+		}
+	}
+
+	@Override
+	public int modifyAttachFile(MultipartFile file, String boardUuid, String uuid) {
+		
+		if( file.isEmpty()) {
+			return 0;
+		}
+		String originalFilename = file.getOriginalFilename();
+		long fileSize = file.getSize();
+		String fileType = file.getContentType();
+		Date date = new Date();
+		String uploadPath = FilePath.MYLIFE_PATH;
+		String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+		String storedFileName = uuid+extension;
+		
+		AttachFileVo attachFileVo = new AttachFileVo();
+		attachFileVo.setBoardUuid(boardUuid);
+		attachFileVo.setUuid(uuid);
+		attachFileVo.setOrgFileName(storedFileName);
+		attachFileVo.setFileDirectory(uploadPath);
+		attachFileVo.setFileSize(fileSize);
+		attachFileVo.setFileType(fileType);
+		attachFileVo.setFileExtension(extension);
+		attachFileVo.setStoredFileName(storedFileName);
+		attachFileVo.setUpdateDate(date);
+		attachFileVo.setUpdateUser("windRider");
+		
+		String sqlId = ".updateAttachFile";
+		
+		int result = sqlSession.update(namespace+sqlId,attachFileVo);
+		delete(storedFileName);
+		upload(file,uploadPath,storedFileName);
+		
+		return result;
+	}
+
+	@Override
+	public int deleteAttachFile(String boardUuid) {
+		HashMap<String, Object> fileMap = new HashMap<String, Object>();
+		fileMap.put("boardUuid", boardUuid);
+		List<AttachFileVo> list = getAttachFile(fileMap);
+		
+		for(int i=0; i<list.size(); i++) {
+			delete(list.get(i).getStoredFileName()); 
+		}
+		String sqlId = ".deleteAttachFile";
+		AttachFileVo attachFileVo = new AttachFileVo();
+		attachFileVo.setBoardUuid(boardUuid);
+		
+		int result = sqlSession.delete(namespace+sqlId, attachFileVo); 
+		return result;
+	}
+	
+	@Override
+	public List<AttachFileVo> getAttachFile(HashMap<String, Object> map){
+		String sqlId = ".getAttachFile";
+		List<AttachFileVo> list = sqlSession.selectList(namespace+sqlId, map);
+		return list;
 	}
 }
 

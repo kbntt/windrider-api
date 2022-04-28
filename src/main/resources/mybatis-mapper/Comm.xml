@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+    
+<mapper namespace="kr.co.windrider.comm">
+    <insert id = "saveAttachFile" parameterType = "kr.co.windrider.vo.AttachFileVo">
+    /* kr.co.windrider.comm.saveAttachFile */
+        INSERT INTO ATTACH_FILE (
+             UUID
+            ,BOARD_UUID
+            ,STORED_FILE_NAME
+            ,ORG_FILE_NAME
+            ,FILE_EXTENSION
+            ,FILE_DIRECTORY
+            ,FILE_SIZE
+            ,FILE_TYPE
+            ,UPDATE_USER
+            ,UPDATE_DATE
+            ,CREATE_USER
+            ,CREATE_DATE
+        )
+        VALUES(
+             #{uuid}
+            ,#{boardUuid}
+            ,#{storedFileName}
+            ,#{orgFileName}
+            ,#{fileExtension}
+            ,#{fileDirectory}
+            ,#{fileSize}
+            ,#{fileType}
+            ,#{updateUser}
+            ,#{updateDate}
+            ,#{createUser}
+            ,#{createDate}
+        )
+    </insert>
+    
+	<!-- 파일 수정 -->
+	<update id = "updateAttachFile" parameterType="kr.co.windrider.vo.AttachFileVo">
+		/* kr.co.windrider.comm.updateAttachFile */
+         UPDATE ATTACH_FILE
+         SET    UPDATE_USER = #{updateUser}
+               ,UPDATE_DATE = #{updateDate}
+                <if test = 'boardUuid != null and boardUuid != ""'>
+                  ,BOARD_UUID = #{boardUuid}
+                </if>
+                <if test = 'storedFileName != null and storedFileName != ""'>
+                  ,STORED_FILE_NAME = #{storedFileName}
+                </if>
+                <if test = 'orgFileName != null and orgFileName != ""'>
+                  ,ORG_FILE_NAME = #{orgFileName}
+                </if>
+                <if test = 'fileExtension != null and fileExtension != ""'>
+                  ,FILE_EXTENSION = #{fileExtension}
+                </if>
+                <if test = 'fileDirectory != null and fileDirectory != ""'>
+                  ,FILE_DIRECTORY = #{fileDirectory}
+                </if>
+                <if test = 'fileSize != null and fileSize != ""'>
+                  ,FILE_SIZE = #{fileSize}
+                </if>
+                <if test = 'fileType != null and fileType != ""'>
+                  ,FILE_TYPE = #{fileType}
+                </if>
+         WHERE 1=1
+         <if test = 'uuid != null and uuid != ""'>
+           AND UUID = #{uuid}
+         </if>
+         <if test = 'boardUuid != null and boardUuid != ""'>
+           AND BOARD_UUID = #{boardUuid}
+         </if>
+     </update>
+     
+    <!-- 첨부파일 조회 -->
+	<select id = "getAttachFile" parameterType = "java.util.HashMap" resultType = "kr.co.windrider.vo.AttachFileVo">
+		/* kr.co.windrider.comm.getAttachFile */
+        SELECT UUID             AS  uuid          
+              ,BOARD_UUID       AS  boardUuid     
+              ,STORED_FILE_NAME AS  storedFileName
+              ,ORG_FILE_NAME    AS  orgFileName
+              ,FILE_EXTENSION   AS  fileExtension 
+              ,FILE_DIRECTORY   AS  fileDirectory
+              ,FILE_SIZE        AS  fileSize      
+              ,FILE_TYPE        AS  fileType      
+              ,UPDATE_USER      AS  updateUser    
+              ,UPDATE_DATE      AS  updateDate    
+              ,CREATE_USER      AS  createUser    
+              ,CREATE_DATE      AS  createDate  
+              ,CONCAT(FILE_DIRECTORY, STORED_FILE_NAME) AS imgUrl
+        FROM   ATTACH_FILE
+        WHERE  1 = 1
+        <if test='uuid != null and uuid !=""'>
+          AND    UUID = #{uuid}
+        </if>
+        <if test='boardUuid != null and boardUuid !=""'>
+          AND    BOARD_UUID = #{boardUuid}
+        </if>
+        ORDER BY CREATE_DATE DESC
+	</select>  
+
+    <!-- 첨부파일 삭제 -->
+	<delete id = "deleteAttachFile" parameterType = "kr.co.windrider.vo.AttachFileVo">
+		/* kr.co.windrider.comm.deleteAttachFile */
+        DELETE
+        FROM   ATTACH_FILE
+        WHERE  1 = 1
+        <if test='uuid != null and uuid !=""'>
+          AND    UUID = #{uuid}
+        </if>
+        <if test='boardUuid != null and boardUuid !=""'>
+          AND    BOARD_UUID = #{boardUuid}
+        </if>
+	</delete>    
+    
+</mapper>      
+                    
