@@ -15,4 +15,5 @@ public interface MyLifeService {
 	public int saveMyLife(HashMap<String, Object> map,MultipartFile file);
 	public int modifyMyLife(HashMap<String, Object> map,MultipartFile file);
 	public int delMyLife(HashMap<String, Object> map);
+	public MyLifeVo getMyLifeOne(HashMap<String, Object> map);//2022-04-11
 }

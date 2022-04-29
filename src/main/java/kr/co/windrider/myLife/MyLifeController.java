@@ -47,7 +47,7 @@ public class MyLifeController {
 		for(int i =0; i < list.size(); i++) {
 			HashMap<String, Object> fileMap = new HashMap<String, Object>();
 			fileMap.put("boardUuid", list.get(i).getUuid());
-			List<AttachFileVo> fileList = null;//fileStorageService.getAttachFile(fileMap);
+			List<AttachFileVo> fileList = fileStorageService.getAttachFile(fileMap);
 			list.get(i).setFilelist(fileList);
 		}
 		return list;
@@ -64,12 +64,12 @@ public class MyLifeController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("myLifeVo", myLifeVo);
 		
-		MyLifeVo vo = null;//myLifeService.getMyLifeOne(map);
+		MyLifeVo vo = myLifeService.getMyLifeOne(map);
 
 		if( vo != null) {
 			HashMap<String, Object> fileMap = new HashMap<String, Object>();
 			fileMap.put("boardUuid", vo.getUuid());
-			List<AttachFileVo> fileList = null;//fileStorageService.getAttachFile(fileMap);
+			List<AttachFileVo> fileList = fileStorageService.getAttachFile(fileMap);
 			vo.setFilelist(fileList);
 		}
 		

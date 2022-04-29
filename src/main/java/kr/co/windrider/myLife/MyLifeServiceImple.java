@@ -81,5 +81,12 @@ public class MyLifeServiceImple implements MyLifeService{
 		fileStorageService.deleteAttachFile(boardUuid);
 		return result;
 	}
+	
+	@Override
+	public MyLifeVo getMyLifeOne(HashMap<String, Object> map) {
+		String sqlId = ".getMyLife";
+		MyLifeVo vo = sqlSession.selectOne(namespace+sqlId, map);
+		return vo;
+	}
 
 }
