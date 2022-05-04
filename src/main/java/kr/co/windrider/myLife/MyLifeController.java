@@ -104,47 +104,6 @@ public class MyLifeController {
 		return resultMap;
 	}
 	 
-	@PutMapping("/myLife/modifyMyLife")
-    public HashMap<String, Object>  modifyMyLife(
-    		HttpServletRequest request, @RequestPart(value = "file",required = false) MultipartFile file
-    		) {
-
-		String uuid = (String) request.getParameter("uuid");
-		String title = (String) request.getParameter("title");
-		String contents = (String) request.getParameter("contents");
-		String imageModState = (String) request.getParameter("imageModState");
-		String[] orgFileUuid = request.getParameterValues("orgFileUuid");
-
-		Date date = new Date();
-		MyLifeVo myLifeVo = new MyLifeVo();
-		myLifeVo.setUuid(uuid);
-		myLifeVo.setTitle(title);
-		myLifeVo.setContents(contents);
-		myLifeVo.setUpdateUser("windRider");
-		myLifeVo.setUpdateDate(date);
-		myLifeVo.setImageModState(imageModState);
-				
-		List<AttachFileVo> attachFileVoList =  new ArrayList<>();
-		for (int i = 0; i < orgFileUuid.length; i++) {
-			System.out.println(orgFileUuid[i]);
-			AttachFileVo attachFileVo = new AttachFileVo();
-			attachFileVo.setOrgFileUuid(orgFileUuid[i]);
-			attachFileVo.setUuid(orgFileUuid[i]);
-			attachFileVoList.add(attachFileVo);
-			myLifeVo.setFilelist(attachFileVoList);
-		}
-
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("myLifeVo", myLifeVo);
-		int result = myLifeService.modifyMyLife(map,file);
-		
-		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		if( 0 < result  ) { resultMap.put("msg", "SUCCESS");}
-		else { resultMap.put("msg", "FAIL");}
-		
-		return resultMap;
-		
-    }
 	@DeleteMapping("/myLife/delMyLife/{uuid}")
 	public HashMap<String, Object> delMyLife(@PathVariable String uuid) throws Exception{
 		MyLifeVo myLifeVo = new MyLifeVo();
@@ -159,4 +118,41 @@ public class MyLifeController {
 		else { resultMap.put("msg", "FAIL");}
 		return resultMap;
 	}
+	
+	@PutMapping("/myLife/modifyMyLife")
+	public HashMap<String, Object> modifyMyLife(HttpServletRequest request, @RequestPart(value="file", required=false)
+	MultipartFile file
+			){
+		String uuid = (String) request.getParameter("uuid");
+		String title = (String) request.getParameter("title");
+		String contents = (String) request.getParameter("contents");
+		String imageModState = (String) request.getParameter("imageModState");
+		String[] orgFileUuid = request.getParameterValues("orgFileUuid");
+		
+		Date date = new Date();
+		MyLifeVo myLifeVo = new MyLifeVo();
+		myLifeVo.setUuid(uuid);
+		myLifeVo.setTitle(title);
+		myLifeVo.setContents(contents);
+		myLifeVo.setUpdateDate(date);
+		myLifeVo.setImageModState(imageModState);
+		List<AttachFileVo> attachFileVoList = new ArrayList<>();
+		for(int i = 0; i<orgFileUuid.length; i++) {
+			AttachFileVo attachFileVo = new AttachFileVo();
+			attachFileVo.setOrgFileUuid(orgFileUuid[i]);
+			attachFileVo.setUuid(orgFileUuid[i]);
+			attachFileVoList.add(attachFileVo);
+			myLifeVo.setFilelist(attachFileVoList);
+		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("myLifeVo", myLifeVo);
+		
+		int result = myLifeService.modifyMyLife(map,file);
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		if(0<result) { resultMap.put("msg", "SUCCESS");}
+		else { resultMap.put("msg", "FAIL");}
+		return resultMap;
+	}
+	
 }

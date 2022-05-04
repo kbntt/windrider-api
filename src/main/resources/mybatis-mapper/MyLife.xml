@@ -29,10 +29,17 @@
         INSERT INTO MY_LIFE ( UUID       ,TITLE       ,CONTENTS    ,DELETE_YN   ,UPDATE_USER ,UPDATE_DATE ,CREATE_USER ,CREATE_DATE )
         VALUES(              #{myLifeVo.uuid}      ,#{myLifeVo.title}     ,#{myLifeVo.contents}  ,#{myLifeVo.deleteYn}, #{myLifeVo.updateUser},#{myLifeVo.updateDate},#{myLifeVo.createUser},#{myLifeVo.createDate}      )
 	</insert>
-	
-	<!-- 파일 수정 2022-04-11 -->
-	<update id = "updateMyLife" parameterType="java.util.HashMap">
-		/* kr.co.windrider.MyLife.updateMyLife */
+	 
+	<delete id="delMyLife" parameterType = "java.util.HashMap">
+	    /* kr.co.windrider.myLife.delMyLife */
+	    DELETE
+	    FROM   MY_LIFE
+	    WHERE  1 = 1
+	    AND    UUID = #{myLifeVo.uuid}
+	</delete>
+	<!-- 수정 -->
+    <update id = "updateMyLife" parameterType="java.util.HashMap">
+        /* kr.co.windrider.MyLife.updateMyLife */
          UPDATE MY_LIFE
          SET    UPDATE_USER = #{myLifeVo.updateUser}
                ,UPDATE_DATE = #{myLifeVo.updateDate}
@@ -50,12 +57,4 @@
            AND UUID = #{myLifeVo.uuid}
          </if>
      </update>
-	 <delete id="delMyLife" parameterType = "java.util.HashMap">
-	     /* kr.co.windrider.myLife.delMyLife */
-	     DELETE
-	     FROM   MY_LIFE
-	     WHERE  1 = 1
-	     AND    UUID = #{myLifeVo.uuid}
-	 </delete>
-	
 </mapper>	

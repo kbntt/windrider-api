@@ -13,7 +13,7 @@ import kr.co.windrider.vo.MyLifeVo;
 public interface MyLifeService {
 	public List<MyLifeVo> getMyLife(HashMap<String, Object> map); 
 	public int saveMyLife(HashMap<String, Object> map,MultipartFile file);
-	public int modifyMyLife(HashMap<String, Object> map,MultipartFile file);
 	public int delMyLife(HashMap<String, Object> map);
-	public MyLifeVo getMyLifeOne(HashMap<String, Object> map);//2022-04-11
+	public MyLifeVo getMyLifeOne(HashMap<String, Object> map);
+	public int modifyMyLife(HashMap<String, Object> map,MultipartFile file);
 }

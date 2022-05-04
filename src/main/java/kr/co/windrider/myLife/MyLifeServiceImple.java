@@ -44,33 +44,6 @@ public class MyLifeServiceImple implements MyLifeService{
 	}
 
 	@Override
-	public int modifyMyLife(HashMap<String, Object> map,MultipartFile file) {
-		
-		MyLifeVo myLifeVo = new MyLifeVo();
-		
-		myLifeVo = (MyLifeVo)map.get("myLifeVo");
-		String boardUuid = myLifeVo.getUuid(); 
-		List<AttachFileVo> fileList = myLifeVo.getFilelist(); 
-		
-		int result = 0;
-		// 파일이 수정됨
-		if( "true".equals(myLifeVo.getImageModState()) ) {
-			for(int i =0; i < fileList.size(); i++) {
-			    result = fileStorageService.modifyAttachFile(file, boardUuid, fileList.get(i).getOrgFileUuid());
-				if(0 < result) {
-					String sqlId = ".updateMyLife";
-					result = sqlSession.update(namespace+sqlId, map);
-				}
-			}
-		}else {
-			// 파일이 수정안됨
-			String sqlId = ".updateMyLife";
-			result = sqlSession.update(namespace+sqlId, map);
-		}
-		
-		return result;
-	}
-	@Override
 	public int delMyLife(HashMap<String, Object> map) {
 		String sqlId = ".delMyLife";
 		int result = sqlSession.delete(namespace+sqlId, map);
@@ -88,5 +61,29 @@ public class MyLifeServiceImple implements MyLifeService{
 		MyLifeVo vo = sqlSession.selectOne(namespace+sqlId, map);
 		return vo;
 	}
-
+	
+	@Override
+	public int modifyMyLife(HashMap<String, Object> map,MultipartFile file) {
+		MyLifeVo myLifeVo = new MyLifeVo();
+		myLifeVo = (MyLifeVo)map.get("myLifeVo");
+		String boardUuid = myLifeVo.getUuid();
+		List<AttachFileVo> fileList = myLifeVo.getFilelist();
+		
+		int result = 0;
+		//파일이 수정됨
+		if( "true".equals(myLifeVo.getImageModState())) {
+			for(int i= 0; i <fileList.size();i++) {
+				result = fileStorageService.modifyAttachFile(file,boardUuid, fileList.get(i).getOrgFileUuid() );
+				if(0<result) {
+					String sqlId = ".updateMyLife";
+					result = sqlSession.update(namespace+sqlId, map);
+				}
+			}
+		}else {
+			String sqlId = ".updateMyLife";
+			result = sqlSession.update(namespace+sqlId, map);
+		}
+		
+		return result;
+	}
 }

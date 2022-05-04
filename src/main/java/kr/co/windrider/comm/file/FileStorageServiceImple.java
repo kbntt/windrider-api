@@ -57,7 +57,7 @@ public class FileStorageServiceImple implements FileStorageService {
     }
 
 	@Override
-	public int saveAttachFile(MultipartFile file, String boardUiid) {
+	public int saveAttachFile(MultipartFile file, String boardUuid) {
 		
 		if( file.isEmpty()) {
 			return 0;
@@ -73,7 +73,7 @@ public class FileStorageServiceImple implements FileStorageService {
 		
 		AttachFileVo attachFileVo = new AttachFileVo();
 		attachFileVo.setUuid(uuid);
-		attachFileVo.setBoardUuid(boardUiid);
+		attachFileVo.setBoardUuid(boardUuid);
 		attachFileVo.setOrgFileName(originalFilename);
 		attachFileVo.setFileDirectory(uploadPath);
 		attachFileVo.setFileSize(fileSize);
@@ -106,40 +106,6 @@ public class FileStorageServiceImple implements FileStorageService {
 		}
 	}
 
-	@Override
-	public int modifyAttachFile(MultipartFile file, String boardUuid, String uuid) {
-		
-		if( file.isEmpty()) {
-			return 0;
-		}
-		String originalFilename = file.getOriginalFilename();
-		long fileSize = file.getSize();
-		String fileType = file.getContentType();
-		Date date = new Date();
-		String uploadPath = FilePath.MYLIFE_PATH;
-		String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-		String storedFileName = uuid+extension;
-		
-		AttachFileVo attachFileVo = new AttachFileVo();
-		attachFileVo.setBoardUuid(boardUuid);
-		attachFileVo.setUuid(uuid);
-		attachFileVo.setOrgFileName(storedFileName);
-		attachFileVo.setFileDirectory(uploadPath);
-		attachFileVo.setFileSize(fileSize);
-		attachFileVo.setFileType(fileType);
-		attachFileVo.setFileExtension(extension);
-		attachFileVo.setStoredFileName(storedFileName);
-		attachFileVo.setUpdateDate(date);
-		attachFileVo.setUpdateUser("windRider");
-		
-		String sqlId = ".updateAttachFile";
-		
-		int result = sqlSession.update(namespace+sqlId,attachFileVo);
-		delete(storedFileName);
-		upload(file,uploadPath,storedFileName);
-		
-		return result;
-	}
 
 	@Override
 	public int deleteAttachFile(String boardUuid) {
@@ -163,6 +129,40 @@ public class FileStorageServiceImple implements FileStorageService {
 		String sqlId = ".getAttachFile";
 		List<AttachFileVo> list = sqlSession.selectList(namespace+sqlId, map);
 		return list;
+	}
+	
+	@Override
+	public int modifyAttachFile(MultipartFile file,String boardUuid, String uuid ) {
+
+		if( file.isEmpty()) {
+			return 0;
+		}
+		String originalFilename = file.getOriginalFilename();
+		long fileSize = file.getSize();
+		String fileType = file.getContentType();
+		Date date = new Date();
+		String uploadPath = FilePath.MYLIFE_PATH;
+		String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+		String storedFileName = uuid+extension;
+		
+		AttachFileVo attachFileVo = new AttachFileVo();
+		attachFileVo.setBoardUuid(boardUuid);
+		attachFileVo.setUuid(uuid);
+		attachFileVo.setOrgFileName(originalFilename);
+		attachFileVo.setFileDirectory(uploadPath);
+		attachFileVo.setFileSize(fileSize);
+		attachFileVo.setFileType(fileType);
+		attachFileVo.setFileExtension(extension);
+		attachFileVo.setStoredFileName(storedFileName);
+		attachFileVo.setUpdateDate(date);
+		attachFileVo.setCreateUser("windRider");
+		
+		String sqlId = ".updateAttachFile";
+		
+		int result = sqlSession.update(namespace+sqlId,attachFileVo);
+		delete(storedFileName);
+		upload(file,uploadPath,storedFileName);
+		return result;
 	}
 }
 

@@ -35,42 +35,6 @@
             ,#{createDate}
         )
     </insert>
-    
-	<!-- 파일 수정 -->
-	<update id = "updateAttachFile" parameterType="kr.co.windrider.vo.AttachFileVo">
-		/* kr.co.windrider.comm.updateAttachFile */
-         UPDATE ATTACH_FILE
-         SET    UPDATE_USER = #{updateUser}
-               ,UPDATE_DATE = #{updateDate}
-                <if test = 'boardUuid != null and boardUuid != ""'>
-                  ,BOARD_UUID = #{boardUuid}
-                </if>
-                <if test = 'storedFileName != null and storedFileName != ""'>
-                  ,STORED_FILE_NAME = #{storedFileName}
-                </if>
-                <if test = 'orgFileName != null and orgFileName != ""'>
-                  ,ORG_FILE_NAME = #{orgFileName}
-                </if>
-                <if test = 'fileExtension != null and fileExtension != ""'>
-                  ,FILE_EXTENSION = #{fileExtension}
-                </if>
-                <if test = 'fileDirectory != null and fileDirectory != ""'>
-                  ,FILE_DIRECTORY = #{fileDirectory}
-                </if>
-                <if test = 'fileSize != null and fileSize != ""'>
-                  ,FILE_SIZE = #{fileSize}
-                </if>
-                <if test = 'fileType != null and fileType != ""'>
-                  ,FILE_TYPE = #{fileType}
-                </if>
-         WHERE 1=1
-         <if test = 'uuid != null and uuid != ""'>
-           AND UUID = #{uuid}
-         </if>
-         <if test = 'boardUuid != null and boardUuid != ""'>
-           AND BOARD_UUID = #{boardUuid}
-         </if>
-     </update>
      
     <!-- 첨부파일 조회 -->
 	<select id = "getAttachFile" parameterType = "java.util.HashMap" resultType = "kr.co.windrider.vo.AttachFileVo">
@@ -111,7 +75,43 @@
         <if test='boardUuid != null and boardUuid !=""'>
           AND    BOARD_UUID = #{boardUuid}
         </if>
-	</delete>    
+	</delete>   
+	 
+    <!-- 파일 수정 -->
+    <update id = "updateAttachFile" parameterType="kr.co.windrider.vo.AttachFileVo">
+        /* kr.co.windrider.comm.updateAttachFile */
+         UPDATE ATTACH_FILE
+         SET    UPDATE_USER = #{updateUser}
+               ,UPDATE_DATE = #{updateDate}
+                <if test = 'boardUuid != null and boardUuid != ""'>
+                  ,BOARD_UUID = #{boardUuid}
+                </if>
+                <if test = 'storedFileName != null and storedFileName != ""'>
+                  ,STORED_FILE_NAME = #{storedFileName}
+                </if>
+                <if test = 'orgFileName != null and orgFileName != ""'>
+                  ,ORG_FILE_NAME = #{orgFileName}
+                </if>
+                <if test = 'fileExtension != null and fileExtension != ""'>
+                  ,FILE_EXTENSION = #{fileExtension}
+                </if>
+                <if test = 'fileDirectory != null and fileDirectory != ""'>
+                  ,FILE_DIRECTORY = #{fileDirectory}
+                </if>
+                <if test = 'fileSize != null and fileSize != ""'>
+                  ,FILE_SIZE = #{fileSize}
+                </if>
+                <if test = 'fileType != null and fileType != ""'>
+                  ,FILE_TYPE = #{fileType}
+                </if>
+         WHERE 1=1
+         <if test = 'uuid != null and uuid != ""'>
+           AND UUID = #{uuid}
+         </if>
+         <if test = 'boardUuid != null and boardUuid != ""'>
+           AND BOARD_UUID = #{boardUuid}
+         </if>
+     </update>
     
 </mapper>      
                     
